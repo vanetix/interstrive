@@ -1,15 +1,15 @@
 Interstrive
 ============
-A simple command line todo application written to [go](http://golang.org)
+Command line based task management priority queue.
 
 ## Usage
-Create new item (back or queue)
+#### Create new item (back or queue)
 `interstrive -c 'text'`
-List current items
+#### List current items
 `interstrive -l`
-Complete the first item in the list (or queue)
+#### Complete the first item in the list (or queue)
 `interstrive -f 1`
-More commands can be found with:
+#### More commands can be found with:
 `interstrive -h, --help`
 
 # License (MIT)
