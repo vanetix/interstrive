@@ -1,27 +1,22 @@
 package interstrive
 
 import "fmt"
+import "encoding/json"
 import "container/heap"
+
+/**
+ * Task type for storing associated
+ * task data
+ */
 
 type Task struct {
 	name string
 	priority int
 }
 
-
 /**
- * add a task to the tasks array
+ * Task string method for easy printing to stdout
  */
-
-func (task *Task) addTask(t Task) {
-	return
-}
-
-func (task *Task) removeTask(t Task) {
-	// nothing
-	return
-}
-
 func (task *Task) String() string {
 	return fmt.Sprintf("Task: %s, Priority: %d", task.title, task.priority)
 }
@@ -46,7 +41,7 @@ func (tasks Tasks) Swap(i, j int) {
 
 func (tasks *Tasks) Push(t Task) {
 	len := len(tasks)
-	tasks := tasks[0 : len + 1]
+	tasks = tasks[0 : len + 1]
 	tasks[len] = t
 
 	//next := *tasks
@@ -71,4 +66,21 @@ func (tasks *Tasks) Pop() Task {
 	//return task
 }
 
+/**
+ * Encode the `tasks` as json and save
+ * to `~/.interstrive.json`.
+ */
 
+func (tasks Tasks) Save() (status bool, err error) {
+	err, jsonStr = json.Marshal(tasks)
+	return
+}
+
+/**
+ * Load the json encoded tasks from
+ * `~/.interstrive.json`
+ */
+
+func (tasks Tasks) Load() {
+
+}
