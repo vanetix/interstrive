@@ -1,10 +1,10 @@
 package main
 
 import "fmt"
-import "./interstrive"
+import "../interstrive"
 
 
 func main() {
-	task := new(Task)
+	task := new(interstrive.Task)
 	fmt.Println(Task)
 }
