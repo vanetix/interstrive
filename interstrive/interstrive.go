@@ -1,8 +1,10 @@
 package interstrive
 
-import "fmt"
-import "encoding/json"
-import "container/heap"
+import (
+	"fmt"
+	"io/ioutil"
+	"encoding/json"
+)
 
 /**
  * Task type for storing associated
@@ -17,15 +19,16 @@ type Task struct {
 /**
  * Task string method for easy printing to stdout
  */
+
 func (task *Task) String() string {
-	return fmt.Sprintf("Task: %s, Priority: %d", task.title, task.priority)
+	return fmt.Sprintf("Task: %s, Priority: %d", task.name, task.priority)
 }
 
 /**
- * Task heap
+ * Tasks, implements `container/heap`
  */
 
-type Tasks []Task
+type Tasks []*Task
 
 func (tasks Tasks) Len() int {
 	return len(tasks)
@@ -39,31 +42,18 @@ func (tasks Tasks) Swap(i, j int) {
 	tasks[i], tasks[j] = tasks[j], tasks[i]
 }
 
-func (tasks *Tasks) Push(t Task) {
-	len := len(tasks)
-	tasks = tasks[0 : len + 1]
-	tasks[len] = t
-
-	//next := *tasks
-	//len := len(next)
-	//next = next[0 : len + 1]
-	//next[len] = t
-	//tasks = next
+func (tasks *Tasks) Push(t *Task) {
+	len := len(*tasks)
+	*tasks = (*tasks)[0 : len + 1]
+	(*tasks)[len] = t
 }
 
-func (tasks *Tasks) Pop() Task {
-	len := len(tasks)
-	task := tasks[len - 1]
-	tasks = tasks[0 : len - 1]
+func (tasks *Tasks) Pop() *Task {
+	len := len(*tasks)
+	task := (*tasks)[len - 1]
+	(*tasks) = (*tasks)[0 : len - 1]
 
 	return task
-
-	//next := *tasks
-	//len := len(next)
-	//task := next[len - 1]
-	//*tasks = next[0 : len - 1]
-
-	//return task
 }
 
 /**
@@ -71,9 +61,20 @@ func (tasks *Tasks) Pop() Task {
  * to `~/.interstrive.json`.
  */
 
-func (tasks Tasks) Save() (status bool, err error) {
-	err, jsonStr = json.Marshal(tasks)
-	return
+func (tasks Tasks) Save() (bool, error) {
+	jsonStr, jsonErr := json.Marshal(tasks)
+
+	if jsonErr != nil {
+		return false, jsonErr
+	}
+
+	writeErr := ioutil.WriteFile("~/.interstrive.json", jsonStr, 0644)
+
+	if writeErr != nil {
+		return false, writeErr
+	}
+
+	return true, nil
 }
 
 /**
@@ -81,6 +82,19 @@ func (tasks Tasks) Save() (status bool, err error) {
  * `~/.interstrive.json`
  */
 
-func (tasks Tasks) Load() {
+func (tasks *Tasks) Load() (bool, error) {
+	jsonStr, readErr := ioutil.ReadFile("~/.interstrive.json")
 
+	if readErr != nil {
+		fmt.Println(readErr)
+		return false, readErr
+	}
+
+	jsonErr := json.Unmarshal(jsonStr, tasks)
+
+	if jsonErr != nil {
+		return false, jsonErr
+	}
+
+	return true, nil
 }
