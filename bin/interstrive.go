@@ -1,10 +1,13 @@
 package main
 
-import "fmt"
-import "../interstrive"
-
+import (
+	"fmt"
+	"flag"
+	"container/heap"
+	"github.com/vanetix/interstrive/interstrive"
+)
 
 func main() {
-	task := new(interstrive.Task)
-	fmt.Println(Task)
+	task := interstrive.Task{"Test Task", 2}
+	fmt.Println(task)
 }
