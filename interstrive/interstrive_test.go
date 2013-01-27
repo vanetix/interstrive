@@ -43,7 +43,7 @@ func TestTaskPop (t *testing.T) {
 
 	pop := heap.Pop(&tasks).(*Task)
 
-	if pop.priority != 1 {
+	if pop.priority != 2 {
 		t.Error("The wrong priority task was popped. Got :", pop.priority)
 	}
 }

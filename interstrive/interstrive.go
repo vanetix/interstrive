@@ -35,7 +35,7 @@ func (tasks Tasks) Len() int {
 }
 
 func (tasks Tasks) Less(i, j int) bool {
-	return tasks[i].priority < tasks[j].priority
+	return tasks[i].priority > tasks[j].priority
 }
 
 func (tasks Tasks) Swap(i, j int) {
