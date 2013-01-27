@@ -61,14 +61,14 @@ func (tasks *Tasks) Pop() interface{} {
  * to `~/.interstrive.json`.
  */
 
-func (tasks Tasks) Save() (bool, error) {
+func (tasks Tasks) Save(path string) (bool, error) {
 	jsonStr, jsonErr := json.Marshal(tasks)
 
 	if jsonErr != nil {
 		return false, jsonErr
 	}
 
-	writeErr := ioutil.WriteFile("~/.interstrive.json", jsonStr, 0644)
+	writeErr := ioutil.WriteFile(path, jsonStr, 0644)
 
 	if writeErr != nil {
 		return false, writeErr
@@ -82,8 +82,8 @@ func (tasks Tasks) Save() (bool, error) {
  * `~/.interstrive.json`
  */
 
-func (tasks *Tasks) Load() (bool, error) {
-	jsonStr, readErr := ioutil.ReadFile("~/.interstrive.json")
+func (tasks *Tasks) Load(path string) (bool, error) {
+	jsonStr, readErr := ioutil.ReadFile(path)
 
 	if readErr != nil {
 		fmt.Println(readErr)
