@@ -20,8 +20,8 @@ type Task struct {
  * Task string method for easy printing to stdout
  */
 
-func (task *Task) String() string {
-	return fmt.Sprintf("Task: %s, Priority: %d", task.name, task.priority)
+func (task Task) String() string {
+	return fmt.Sprintf("Name: %s, Priority: %d", task.name, task.priority)
 }
 
 /**
@@ -42,16 +42,16 @@ func (tasks Tasks) Swap(i, j int) {
 	tasks[i], tasks[j] = tasks[j], tasks[i]
 }
 
-func (tasks *Tasks) Push(t *Task) {
+func (tasks *Tasks) Push(i interface{}) {
 	len := len(*tasks)
 	*tasks = (*tasks)[0 : len + 1]
-	(*tasks)[len] = t
+	(*tasks)[len] = i.(*Task)
 }
 
-func (tasks *Tasks) Pop() *Task {
+func (tasks *Tasks) Pop() interface{} {
 	len := len(*tasks)
 	task := (*tasks)[len - 1]
-	(*tasks) = (*tasks)[0 : len - 1]
+	*tasks = (*tasks)[0 : len - 1]
 
 	return task
 }
