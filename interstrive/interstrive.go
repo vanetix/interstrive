@@ -12,8 +12,8 @@ import (
  */
 
 type Task struct {
-	name string
-	priority int
+	Name string
+	Priority int
 }
 
 /**
@@ -21,7 +21,7 @@ type Task struct {
  */
 
 func (task Task) String() string {
-	return fmt.Sprintf("Name: %s, Priority: %d", task.name, task.priority)
+	return fmt.Sprintf("Name: %s, Priority: %d", task.Name, task.Priority)
 }
 
 /**
@@ -35,7 +35,7 @@ func (tasks Tasks) Len() int {
 }
 
 func (tasks Tasks) Less(i, j int) bool {
-	return tasks[i].priority > tasks[j].priority
+	return tasks[i].Priority > tasks[j].Priority
 }
 
 func (tasks Tasks) Swap(i, j int) {
@@ -86,7 +86,6 @@ func (tasks *Tasks) Load(path string) (bool, error) {
 	jsonStr, readErr := ioutil.ReadFile(path)
 
 	if readErr != nil {
-		fmt.Println(readErr)
 		return false, readErr
 	}
 

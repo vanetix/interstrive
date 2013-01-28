@@ -35,15 +35,15 @@ func TestTaskPop (t *testing.T) {
 
 	for i := cap(tasks); i > 0; i-- {
 		task := &Task{
-			name: "Task",
-			priority: i,
+			Name: "Task",
+			Priority: i,
 		}
 		heap.Push(&tasks, task)
 	}
 
 	pop := heap.Pop(&tasks).(*Task)
 
-	if pop.priority != 2 {
-		t.Error("The wrong priority task was popped. Got :", pop.priority)
+	if pop.Priority != 2 {
+		t.Error("The wrong priority task was popped. Got :", pop.Priority)
 	}
 }
