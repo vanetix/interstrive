@@ -13,7 +13,7 @@ var (
 	// Flags
 	list = flag.Bool("l", false, "list tasks, from highest to lowest priority")
 	pop = flag.Bool("p", false, "highest priority task off the list")
-	create = flag.String("a", "", "create a new task - add a priority with -n")
+	create = flag.String("c", "", "create a new task - add a priority with -n")
 	priority = flag.Int("n", 0, "add a priority to the task being created")
 )
 
