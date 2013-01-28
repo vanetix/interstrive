@@ -4,6 +4,7 @@ import (
 	"os"
 	"fmt"
 	"flag"
+	"path"
 	"container/heap"
 	"github.com/vanetix/interstrive/interstrive"
 )
@@ -32,24 +33,25 @@ func main() {
 	}
 
 	// Initialize and load tasks from ~/.interstrive.json
-    tasks := make(interstrive.Tasks, 0)
+    tasks := make(interstrive.Tasks, 0, 10)
+	config := path.Join(os.Getenv("HOME"), ".interstrive.json")
 
 	// TODO: Fix this error handling, basically ignoring a read error
 	// Might check if the path exists first, then make a new tasks
-    tasks.Load("~/.interstrive.json")
+    tasks.Load(config)
 
 	if *list {
 		for i := range tasks {
-			fmt.Println(tasks[i])
+			fmt.Fprintln(os.Stdout, tasks[i])
 		}
 	}
 
 	if *pop {
 		if tasks.Len() > 0 {
 			task := heap.Pop(&tasks).(*interstrive.Task)
-			fmt.Println(task)
+			fmt.Fprintln(os.Stdout, task)
 		} else {
-			fmt.Fprintf(os.Stderr, "You have no tasks to pop")
+			fmt.Fprintf(os.Stderr, "You have no tasks to pop.\n\n")
 			usage()
 		}
 	}
@@ -65,6 +67,11 @@ func main() {
 
 
 	// Save Tasks before exiting
-	tasks.Save("~/.interstrive.json")
+	_, err := tasks.Save(config)
+
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+
 	os.Exit(0)
 }
