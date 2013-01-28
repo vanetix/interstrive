@@ -15,6 +15,7 @@ var (
 	pop = flag.Bool("p", false, "highest priority task off the list")
 	create = flag.String("c", "", "create a new task - add a priority with -n")
 	priority = flag.Int("n", 0, "add a priority to the task being created")
+	remove = flag.Bool("r", false, "remove all tasks")
 )
 
 func usage() {
@@ -65,6 +66,9 @@ func main() {
 		heap.Push(&tasks, task)
 	}
 
+	if *remove {
+		tasks = nil
+	}
 
 	// Save Tasks before exiting
 	_, err := tasks.Save(config)
