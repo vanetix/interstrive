@@ -21,7 +21,7 @@ type Task struct {
  */
 
 func (task Task) String() string {
-	return fmt.Sprintf("Name: %s, Priority: %d", task.Name, task.Priority)
+	return fmt.Sprintf("%s", task.Name)
 }
 
 /**
