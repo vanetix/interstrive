@@ -21,6 +21,7 @@ var (
 func usage() {
 	fmt.Fprintf(os.Stderr, "usage: strive [flag] [value]\n")
 	flag.PrintDefaults()
+	fmt.Fprintf(os.Stderr, "\n")
 	os.Exit(1)
 }
 
@@ -42,22 +43,29 @@ func main() {
 	tasks.Load(config)
 
 	if *list {
-		fmt.Fprintln(os.Stdout, "\x1b[37mTasks:")
-		for i := range tasks {
-			if i == 0 {
-				fmt.Fprintf(os.Stdout, "\x1b[33;1m")
-			} else {
-				fmt.Fprintf(os.Stdout, "\x1b[0m\x1b[32m")
+		if len(tasks) == 0 {
+			fmt.Fprintf(os.Stdout, "\x1b[31;1mYou have no tasks.\n\n")
+		} else {
+			fmt.Fprintf(os.Stdout, "\x1b[37mTasks:\n")
+
+			for i := range tasks {
+				if i == 0 {
+					fmt.Fprintf(os.Stdout, "\x1b[33;1m")
+				} else {
+					fmt.Fprintf(os.Stdout, "\x1b[0m\x1b[32m")
+				}
+
+				fmt.Fprintf(os.Stdout, "\t%d: %s\n", i + 1, tasks[i])
 			}
 
-			fmt.Fprintf(os.Stdout, "\t%d: %s\n", i + 1, tasks[i])
+			fmt.Fprintf(os.Stdout, "\n")
 		}
 	}
 
 	if *pop {
 		if tasks.Len() > 0 {
 			task := heap.Pop(&tasks).(*interstrive.Task)
-			fmt.Fprintf(os.Stdout, "\x1b[37;1mCompleted: \x1b[0m%s\n", task)
+			fmt.Fprintf(os.Stdout, "\x1b[37;1mCompleted: \x1b[0m%s\n\n", task)
 		} else {
 			fmt.Fprintf(os.Stderr, "\x1b[31;1mYou have no tasks to pop.\x1b[0m\n\n")
 			usage()
@@ -71,6 +79,7 @@ func main() {
 		}
 
 		heap.Push(&tasks, task)
+		fmt.Fprintf(os.Stdout, "\x1b[371mAdded: \x1b[0m\x1b[32m%s\n\n", task.Name)
 	}
 
 	if *remove {
@@ -81,10 +90,8 @@ func main() {
 	_, err := tasks.Save(config)
 
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error: \x1b[31m %s", err)
+		fmt.Fprintf(os.Stderr, "Error: \x1b[31m %s\n", err)
 	}
 
-	// Put a little padding on the bottom before the next term line
-	fmt.Fprintf(os.Stdout, "\n")
 	os.Exit(0)
 }
