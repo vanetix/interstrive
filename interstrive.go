@@ -34,7 +34,7 @@ func main() {
 	}
 
 	// Initialize and load tasks from ~/.interstrive.json
-    tasks := make(interstrive.Tasks, 0, 10)
+    tasks := make(interstrive.Tasks, 0)
 	config := path.Join(os.Getenv("HOME"), ".interstrive.json")
 
 	// TODO: Fix this error handling, basically ignoring a read error
@@ -42,17 +42,24 @@ func main() {
     tasks.Load(config)
 
 	if *list {
+		fmt.Fprintln(os.Stdout, "\x1b[37mTasks:")
 		for i := range tasks {
-			fmt.Fprintln(os.Stdout, tasks[i])
+                        if i == 0 {
+				fmt.Fprintf(os.Stdout, "\x1b[33;1m")
+			} else {
+				fmt.Fprintf(os.Stdout, "\x1b[0m\x1b[32m")
+			}
+
+			fmt.Fprintf(os.Stdout, "\t%d: %s\n", i + 1, tasks[i])
 		}
 	}
 
 	if *pop {
 		if tasks.Len() > 0 {
 			task := heap.Pop(&tasks).(*interstrive.Task)
-			fmt.Fprintln(os.Stdout, task)
+			fmt.Fprintf(os.Stdout, "\x1b[37;1mCompleted: \x1b[0m%s\n", task)
 		} else {
-			fmt.Fprintf(os.Stderr, "You have no tasks to pop.\n\n")
+			fmt.Fprintf(os.Stderr, "\x1b[31;1mYou have no tasks to pop.\x1b[0m\n\n")
 			usage()
 		}
 	}
@@ -67,15 +74,17 @@ func main() {
 	}
 
 	if *remove {
-		tasks = nil
+		tasks = make(interstrive.Tasks, 0)
 	}
 
 	// Save Tasks before exiting
 	_, err := tasks.Save(config)
 
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, "Error: \x1b[31m %s", err)
 	}
 
+	// Put a little padding on the bottom before the next term line
+	fmt.Fprintf(os.Stdout, "\n")
 	os.Exit(0)
 }
