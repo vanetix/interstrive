@@ -28,23 +28,23 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 
-    // If no arguments passed print usage and exit
+	// If no arguments passed print usage and exit
 	if flag.NFlag() == 0 {
 		usage()
 	}
 
 	// Initialize and load tasks from ~/.interstrive.json
-    tasks := make(interstrive.Tasks, 0)
+	tasks := make(interstrive.Tasks, 0)
 	config := path.Join(os.Getenv("HOME"), ".interstrive.json")
 
 	// TODO: Fix this error handling, basically ignoring a read error
 	// Might check if the path exists first, then make a new tasks
-    tasks.Load(config)
+	tasks.Load(config)
 
 	if *list {
 		fmt.Fprintln(os.Stdout, "\x1b[37mTasks:")
 		for i := range tasks {
-                        if i == 0 {
+			if i == 0 {
 				fmt.Fprintf(os.Stdout, "\x1b[33;1m")
 			} else {
 				fmt.Fprintf(os.Stdout, "\x1b[0m\x1b[32m")
