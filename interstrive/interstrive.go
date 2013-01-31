@@ -72,9 +72,7 @@ func (tasks Tasks) Swap(i, j int) {
  */
 
 func (tasks *Tasks) Push(i interface{}) {
-	len := len(*tasks)
-	*tasks = (*tasks)[0 : len + 1]
-	(*tasks)[len] = i.(*Task)
+	*tasks = append(*tasks, i.(*Task))
 }
 
 /**
