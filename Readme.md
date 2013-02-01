@@ -1,22 +1,24 @@
-Interstrive
-============
+# Interstrive
 Command line based task management priority queue.
 
+## Installing
+You must have [go](http://golang.org) installed. To install run `go get github.com/vanetix/interstrive`.
+
 ## Usage
-**Create new item (back of queue unless using priority `-n`):**
+#### Create new item (back of queue unless using priority `-n`):**
 - `interstrive -c 'Task'`
 - `interstrive -c 'Important Task' -n 10`
 
-**List current tasks:**
-- `interstrive -l`
+#### List current tasks:
+`interstrive -l`
 
-**Remove the highest priority task from the list:**
-- `interstrive -p`
+#### Remove the highest priority task from the list:
+`interstrive -p`
 
-**Remove all tasks:**
-- `interstrive -r`
+#### Remove all tasks:
+`interstrive -r`
 
-# License (MIT)
+## License (MIT)
 Copyright (c) 2012 Matt McFarland
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
