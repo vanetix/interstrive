@@ -1,21 +1,17 @@
 Interstrive
 ============
-Command line based task management priority queue
+Command line based task management priority queue.
 
 ## Usage
-***Create new item (back of queue unless using `-n`)***
+**Create new item (back of queue unless using priority `-n`)** 
 - `interstrive -c 'Task'`
 - `interstrive -c 'Important Task' -n 10`
 
-***List current tasks***
-- `interstrive -l`
+**List current tasks:** `interstrive -l`
 
-***Remove the highest priority task from the list***
-- `interstrive -p`
+**Remove the highest priority task from the list: **`interstrive -p`
 
-***Usage***
-- `interstrive --help`
-
+**Remove all tasks:** `interstrive -r`
 
 # License (MIT)
 Copyright (c) 2012 Matt McFarland
