@@ -39,14 +39,13 @@ func main() {
 	config := path.Join(os.Getenv("HOME"), ".interstrive.json")
 
 	// TODO: Fix this error handling, basically ignoring a read error
-	// Might check if the path exists first, then make a new tasks
 	tasks.Load(config)
 
 	if *list {
 		if len(tasks) == 0 {
-			fmt.Fprintf(os.Stdout, "\x1b[31;1mYou have no tasks.\n\n")
+			fmt.Fprintf(os.Stdout, "\x1b[31;1m  You have no tasks.\n\n")
 		} else {
-			fmt.Fprintf(os.Stdout, "\x1b[37mTasks:\n")
+			fmt.Fprintf(os.Stdout, "\x1b[37m  Tasks:\n")
 
 			for i := range tasks {
 				if i == 0 {
@@ -55,7 +54,7 @@ func main() {
 					fmt.Fprintf(os.Stdout, "\x1b[0m\x1b[32m")
 				}
 
-				fmt.Fprintf(os.Stdout, "\t%d: %s\n", i + 1, tasks[i])
+				fmt.Fprintf(os.Stdout, "    %d: %s\n", i + 1, tasks[i])
 			}
 
 			fmt.Fprintf(os.Stdout, "\n")
@@ -65,9 +64,9 @@ func main() {
 	if *pop {
 		if tasks.Len() > 0 {
 			task := heap.Pop(&tasks).(*interstrive.Task)
-			fmt.Fprintf(os.Stdout, "\x1b[37;1mCompleted: \x1b[0m%s\n\n", task)
+			fmt.Fprintf(os.Stdout, "\x1b[37;1m  Completed: \x1b[0m%s\n\n", task)
 		} else {
-			fmt.Fprintf(os.Stderr, "\x1b[31;1mYou have no tasks to pop.\x1b[0m\n\n")
+			fmt.Fprintf(os.Stderr, "\x1b[31;1m  You have no tasks to pop.\x1b[0m\n\n")
 			usage()
 		}
 	}
@@ -79,7 +78,7 @@ func main() {
 		}
 
 		heap.Push(&tasks, task)
-		fmt.Fprintf(os.Stdout, "\x1b[371mAdded: \x1b[0m\x1b[32m%s\n\n", task.Name)
+		fmt.Fprintf(os.Stdout, "\x1b[371m  Added: \x1b[0m\x1b[32m%s\n\n", task.Name)
 	}
 
 	if *remove {
@@ -90,7 +89,7 @@ func main() {
 	_, err := tasks.Save(config)
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: \x1b[31m %s\n", err)
+		fmt.Fprintf(os.Stderr, "  Error: \x1b[31m %s\n", err)
 	}
 
 	os.Exit(0)
