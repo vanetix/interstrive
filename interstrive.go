@@ -3,86 +3,175 @@ package main
 import (
 	"os"
 	"fmt"
-	"flag"
 	"path"
+	"strconv"
 	"container/heap"
+	"github.com/vanetix/commander.go"
 	"github.com/vanetix/interstrive/interstrive"
 )
 
+/**
+ * Global variables
+ */
+
 var (
-	// Flags
-	list = flag.Bool("l", false, "list tasks, from highest to lowest priority")
-	pop = flag.Bool("p", false, "highest priority task off the list")
-	create = flag.String("c", "", "create a new task - add a priority with -n")
-	priority = flag.Int("n", 0, "add a priority to the task being created")
-	remove = flag.Bool("r", false, "remove all tasks")
+	config string
+	task *interstrive.Task
+	tasks interstrive.Tasks
+	program *commander.Commander
 )
 
-func usage() {
-	fmt.Fprintf(os.Stderr, "usage: strive [flag] [value]\n")
-	flag.PrintDefaults()
-	fmt.Fprintf(os.Stderr, "\n")
-	os.Exit(1)
-}
+/**
+ * Initialize globals
+ */
 
-func main() {
-	flag.Usage = usage
-	flag.Parse()
-
-	// If no arguments passed print usage and exit
-	if flag.NFlag() == 0 {
-		usage()
-	}
+func init() {
+	// Initialize a new commander instance
+	program = commander.Init("interstrive", "1.0.0")
 
 	// Initialize and load tasks from ~/.interstrive.json
-	tasks := make(interstrive.Tasks, 0)
-	config := path.Join(os.Getenv("HOME"), ".interstrive.json")
+	tasks = make(interstrive.Tasks, 0)
+
+	// Save config path
+	config = path.Join(os.Getenv("HOME"), ".interstrive.json")
 
 	// TODO: Fix this error handling, basically ignoring a read error
 	tasks.Load(config)
+}
 
-	if *list {
-		if len(tasks) == 0 {
-			fmt.Fprintf(os.Stdout, "\x1b[31;1m  You have no tasks.\n\n")
-		} else {
-			fmt.Fprintf(os.Stdout, "\x1b[37m  Tasks:\n")
+/**
+ * List tasks
+ */
 
-			for i := range tasks {
-				if i == 0 {
-					fmt.Fprintf(os.Stdout, "\x1b[33;1m")
-				} else {
-					fmt.Fprintf(os.Stdout, "\x1b[0m\x1b[32m")
-				}
+func listTasks(args ...string) {
+	if tasks.Len() == 0 {
+		fmt.Fprintf(os.Stdout, "\x1b[31;1m  You have no tasks.\n\n")
+	} else {
+		fmt.Fprintf(os.Stdout, "\x1b[37m  Tasks:\n")
 
-				fmt.Fprintf(os.Stdout, "    %d: %s\n", i + 1, tasks[i])
+		for i := range tasks {
+			if i == 0 {
+				fmt.Fprintf(os.Stdout, "\x1b[33;1m")
+			} else {
+				fmt.Fprintf(os.Stdout, "\x1b[0m\x1b[32m")
 			}
 
-			fmt.Fprintf(os.Stdout, "\n")
+			fmt.Fprintf(os.Stdout, "    %d: %s\n", i + 1, tasks[i])
+		}
+
+		fmt.Fprintf(os.Stdout, "\n")
+	}
+}
+
+/**
+ * Pop highest priority task off the list
+ */
+
+func popTask(args ...string) {
+	if tasks.Len() > 0 {
+		task := heap.Pop(&tasks).(*interstrive.Task)
+		fmt.Fprintf(os.Stdout, "\x1b[37;1m  Completed: \x1b[0m%s\n\n", task)
+	} else {
+		fmt.Fprintf(os.Stderr, "\x1b[31;1m  You have no tasks to pop.\x1b[0m\n\n")
+		program.Usage()
+	}
+}
+
+/**
+ * Create a task
+ */
+
+func createTask(args ...string) {
+	if len(args) == 0 {
+		program.Usage()
+	} else {
+		task = &interstrive.Task{
+			Name: args[0],
+			Priority: 0, // Default priority == 0
 		}
 	}
+}
 
-	if *pop {
-		if tasks.Len() > 0 {
-			task := heap.Pop(&tasks).(*interstrive.Task)
-			fmt.Fprintf(os.Stdout, "\x1b[37;1m  Completed: \x1b[0m%s\n\n", task)
+/**
+ * Set the priority if a task is being created
+ */
+
+func setPriority(args ...string) {
+	if len(args) == 0 || task == nil {
+		program.Usage()
+	} else {
+		n, err := strconv.Atoi(args[0])
+
+		if err != nil {
+			program.Usage()
 		} else {
-			fmt.Fprintf(os.Stderr, "\x1b[31;1m  You have no tasks to pop.\x1b[0m\n\n")
-			usage()
+			task.Priority = n
 		}
 	}
+}
 
-	if *create != "" {
-		task := &interstrive.Task{
-			Name: *create,
-			Priority: *priority,
-		}
+/**
+ * Remove task `args[0]` if present, else remove all tasks
+ */
 
+func removeTask(args ...string) {
+	if len(args) == 0 {
+		tasks = make(interstrive.Tasks, 0)
+	}
+}
+
+func main() {
+	list := &commander.Option{
+		Name: "list",
+		Tiny: "-l",
+		Verbose: "--list",
+		Description: "list tasks from highest to lowest priority",
+		Required: false,
+		Callback: listTasks,
+	}
+
+	pop := &commander.Option{
+		Name: "pop",
+		Tiny: "-p",
+		Verbose: "--pop",
+		Description: "pop the highest priority task off the list",
+		Required: false,
+		Callback: popTask,
+	}
+
+	create := &commander.Option{
+		Name: "create",
+		Tiny: "-c",
+		Verbose: "--create",
+		Description: "create a new task - add a priority with -n",
+		Required: false,
+		Callback: createTask,
+	}
+
+	priority := &commander.Option{
+		Name: "priority",
+		Tiny: "-n",
+		Verbose: "--priority",
+		Description: "create a new task with priority",
+		Required: false,
+		Callback: setPriority,
+	}
+
+	remove := &commander.Option{
+		Name: "remove",
+		Tiny: "-r",
+		Verbose: "--remove",
+		Description: "remove all tasks",
+		Required: false,
+		Callback: removeTask,
+	}
+
+	program.Add(list, pop, create, priority, remove)
+	program.Parse()
+
+	if task != nil {
 		heap.Push(&tasks, task)
 		fmt.Fprintf(os.Stdout, "\x1b[371m  Added: \x1b[0m\x1b[32m%s\n\n", task.Name)
-	}
-
-	if *remove {
-		tasks = make(interstrive.Tasks, 0)
 	}
 
 	// Save Tasks before exiting
