@@ -1,4 +1,4 @@
-# Interstrive
+# Interstrive [![Build Status](https://travis-ci.org/vanetix/interstrive.png?branch=master)](https://travis-ci.org/vanetix/interstrive)
 Command line based task management priority queue.
 
 ## Installing
