@@ -91,6 +91,23 @@ func (tasks *Tasks) Pop() interface{} {
 }
 
 /**
+ * Remove task at index `i` from the queue
+ *
+ * @param {int} i
+ */
+
+func (tasks *Tasks) Remove(i int) bool {
+	// Check for bounds
+	if i > 0 && i < len(tasks) {
+		next := tasks[:i]
+		next = append(&next, tasks[i:])
+		tasks = next
+	} else {
+		return false
+	}
+}
+
+/**
  * Encode the `tasks` as json and save
  * to `~/.interstrive.json`.
  *
