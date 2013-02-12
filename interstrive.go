@@ -123,7 +123,13 @@ func removeTask(args ...string) {
 		if err != nil {
 			program.Usage()
 		} else {
-			tasks.Remove(n - 1)
+			task := tasks.Remove(n - 1)
+
+			if task != nil {
+				fmt.Fprintf(os.Stderr, "\x1b[31;1m  Removed: \x1b[0m%s.\n\n", task)
+			} else {
+				fmt.Fprintf(os.Stderr, "\x1b[31m  Invalid index.\x1b[0m\n\n")
+			}
 		}
 	}
 }
