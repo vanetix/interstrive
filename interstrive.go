@@ -117,6 +117,14 @@ func setPriority(args ...string) {
 func removeTask(args ...string) {
 	if len(args) == 0 {
 		tasks = make(interstrive.Tasks, 0)
+	} else {
+		n, err := strconv.Atoi(args[0])
+
+		if err != nil {
+			program.Usage()
+		} else {
+			tasks.Remove(n - 1)
+		}
 	}
 }
 
