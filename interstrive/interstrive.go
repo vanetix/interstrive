@@ -94,15 +94,14 @@ func (tasks *Tasks) Pop() interface{} {
  * Remove task at index `i` from the queue
  *
  * TODO: Might have to heapify after calling `Remove()`
- * TODO: Fix the silly loop over tail to append them
  *
  * @param {int} i
  */
 
-func (tasks *Tasks) Remove(i int) Task {
+func (tasks *Tasks) Remove(i int) *Task {
 	// Check for bounds
 	if i > 0 && i < len(*tasks) {
-		task := tasks[i]
+		task := (*tasks)[i]
 		next := (*tasks)[:i]
 		next = append(next, (*tasks)[i + 1:]...)
 		*tasks = next
