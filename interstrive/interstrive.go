@@ -93,8 +93,6 @@ func (tasks *Tasks) Pop() interface{} {
 /**
  * Remove task at index `i` from the queue
  *
- * TODO: Might have to heapify after calling `Remove()`
- *
  * @param {int} i
  */
 
