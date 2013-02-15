@@ -7,6 +7,7 @@ package interstrive
 
 import (
 	"testing"
+	"strconv"
 	"container/heap"
 )
 
@@ -44,6 +45,23 @@ func TestTaskPop (t *testing.T) {
 	pop := heap.Pop(&tasks).(*Task)
 
 	if pop.Priority != 2 {
-		t.Error("The wrong priority task was popped. Got :", pop.Priority)
+		t.Error("The wrong priority task was popped. Got:", pop.Priority)
+	}
+}
+
+// Test that remove functions correctly
+func TestTaskRemove (t *testing.T) {
+	tasks := make(Tasks, 0)
+
+	for i := 1; i <= 10; i++ {
+		task := &Task{
+			Name: "Task " + strconv.Itoa(i),
+			Priority: i,
+		}
+		heap.Push(&tasks, task)
+	}
+
+	if task := tasks.Remove(0); task == nil || task.Name != "Task 10" {
+		t.Error("The wrong task was removed. Got: ", task)
 	}
 }

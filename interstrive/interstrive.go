@@ -98,7 +98,7 @@ func (tasks *Tasks) Pop() interface{} {
 
 func (tasks *Tasks) Remove(i int) *Task {
 	// Check for bounds
-	if i > 0 && i < len(*tasks) {
+	if i >= 0 && i < len(*tasks) {
 		task := (*tasks)[i]
 		next := (*tasks)[:i]
 		next = append(next, (*tasks)[i + 1:]...)
