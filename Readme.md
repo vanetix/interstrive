@@ -5,7 +5,7 @@ Command line based task management priority queue.
 You must have [go](http://golang.org) installed. To install run `go get github.com/vanetix/interstrive`.
 
 ## Usage
-#### Create new item (back of queue unless using priority `-n`):**
+#### Create new item (back of queue unless using priority `-n`):
 - `interstrive -c 'Task'`
 - `interstrive -c 'Important Task' -n 10`
 
